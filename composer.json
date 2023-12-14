@@ -20,7 +20,7 @@
         "async-aws/simple-s3": "^1|^2"
     },
     "require-dev": {
-        "phpunit/phpunit": "^10",
+        "phpunit/phpunit": "^10.5",
         "mnapoli/hard-mode": "^0.3",
         "phpstan/phpstan": "^1"
     },
