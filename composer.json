@@ -1,0 +1,32 @@
+{
+    "name": "mnapoli/sqlite-s3",
+    "description": "",
+    "keywords": ["sqlite", "s3", "aws", "serverless"],
+    "license": "MIT",
+    "type": "library",
+    "autoload": {
+        "psr-4": {
+            "SQLiteS3\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "SQLiteS3\\Test\\": "tests/"
+        }
+    },
+    "require": {
+        "php": ">=8.1",
+        "ext-sqlite3": "*",
+        "async-aws/simple-s3": "^1|^2"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^10",
+        "mnapoli/hard-mode": "^0.3",
+        "phpstan/phpstan": "^1"
+    },
+    "config": {
+        "allow-plugins": {
+            "dealerdirect/phpcodesniffer-composer-installer": true
+        }
+    }
+}
