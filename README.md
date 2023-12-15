@@ -15,7 +15,10 @@ A "serverless" SQS database:
 
 The SQLite database (a file) is stored on S3. The PHP class will transparently download the file locally on every request, and upload it back at the end.
 
-If two concurrent requests download the database file, update it (separately), and upload it back, then the last to upload the modified file will overwrite the changes of the other request.
+This has two obvious implications:
+
+1. If two concurrent requests download the database file, update it (separately), and upload it back, then the last to upload the modified file will overwrite the changes of the other request.
+2. There is extra latency added to the request (and it wouldn't work well with huge databases).
 
 That is why this solution is best for testing scenarios (e.g. testing a fully deployed application, where there is one test running at a time). It could also work for development environments with only one active user at a time, where an extra 50ms-100ms per request is acceptable.
 
