@@ -1,4 +1,4 @@
-# S3-backed SQLite database
+# Serverless dev database: SQLite backed by S3
 
 ## Why?
 
