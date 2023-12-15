@@ -48,7 +48,7 @@ $db->exec('SELECT * FROM my-table');
 
 The S3 bucket must exist, but **the SQLite database file will automatically be created** if it doesn't.
 
-The database will be uploaded back to S3 when the `$db` instead is destroyed (i.e. when the PDO connection is closed).
+The database will be uploaded back to S3 when the `$db` instance is destroyed (i.e. when the PDO connection is closed).
 
 ### Configuration
 
