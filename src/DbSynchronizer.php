@@ -10,7 +10,7 @@ use RuntimeException;
 class DbSynchronizer
 {
     private readonly SimpleS3Client $s3;
-    private string|null $dbFileName = null;
+    private string | null $dbFileName = null;
 
     /**
      * @param Configuration|array<Configuration::OPTION_*, string|null> $s3ClientConfig
