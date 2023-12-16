@@ -2,7 +2,7 @@
 
 ## Why?
 
-A "serverless" SQS database:
+A "serverless" SQLite database:
 
 - For development and testing purposes
 - Costs $0
