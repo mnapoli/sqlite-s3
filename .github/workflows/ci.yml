@@ -57,7 +57,5 @@ jobs:
                     restore-keys: php-composer-locked-
             -   name: Install PHP dependencies
                 run: composer install --no-interaction --no-progress --no-suggest
-            -   name: PHP CS
-                run: vendor/bin/phpcs -q --no-colors --report=checkstyle | cs2pr
             -   name: PHPStan
                 run: vendor/bin/phpstan

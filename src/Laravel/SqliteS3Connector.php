@@ -2,14 +2,16 @@
 
 namespace SQLiteS3\Laravel;
 
-use Exception;
 use Illuminate\Database\Connectors\SQLiteConnector;
 use PDO;
+use RuntimeException;
 use SQLiteS3\PDOSQLiteS3;
 
 class SqliteS3Connector extends SQLiteConnector
 {
     /**
+     * @param array<string, mixed> $config
+     *
      * @see \Illuminate\Database\Connectors\SQLiteConnector::connect()
      */
     public function connect(array $config): PDO
@@ -23,12 +25,15 @@ class SqliteS3Connector extends SQLiteConnector
         return parent::connect($config);
     }
 
+    /**
+     * @param array<string, mixed> $options
+     */
     protected function createPdoConnection($dsn, $username, $password, $options): PDO
     {
         if (str_starts_with($dsn, 'sqlite-s3:')) {
             $success = preg_match('/s3:\/\/([^\/]+)\/(.*)/', $dsn, $matches);
             if (! $success) {
-                throw new Exception('Could not parse DSN: ' . $dsn);
+                throw new RuntimeException('Could not parse DSN: ' . $dsn);
             }
             [$_, $bucket, $key] = $matches;
             return new PDOSQLiteS3($bucket, $key);

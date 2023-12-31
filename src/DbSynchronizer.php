@@ -25,8 +25,7 @@ class DbSynchronizer
         private readonly string $bucket,
         private readonly string $key,
         array|Configuration $s3ClientConfig = [],
-    )
-    {
+    ) {
         $this->logger = new StderrLogger(LogLevel::INFO);
         $this->s3 = new SimpleS3Client($s3ClientConfig);
     }
