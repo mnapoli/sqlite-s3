@@ -34,5 +34,12 @@
         "allow-plugins": {
             "dealerdirect/phpcodesniffer-composer-installer": true
         }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "SQLiteS3\\Laravel\\SQLiteS3ServiceProvider"
+            ]
+        }
     }
 }

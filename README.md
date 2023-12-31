@@ -36,22 +36,14 @@ composer require mnapoli/sqlite-s3
 
 ### With Laravel
 
-Add the following to `app/Providers/AppServiceProvider.php` to override the default SQLite connector:
-
-```php
-    public function register(): void
-    {
-        // ...
-        $this->app->bind('db.connector.sqlite', SqliteS3Connector::class);
-    }
-```
-
-Then, update `.env` (or set environment variables) to set:
+Update `.env` (or set environment variables) to set:
 
 - `DB_CONNECTION=sqlite`
 - `DB_DATABASE='s3://the-s3-bucket-name/a-file-name.sqlite'`
 
-When running on AWS Lambda with Bref, the database will be uploaded to S3 on every invocation/request.
+The `DB_DATABASE` usually contains a file name, but here it will contain a S3 URL. That URL will be automatically detected to retrieve the database from S3.
+
+The database will be uploaded to S3 on every request. When running on AWS Lambda with Bref, it will be uploaded/synced on every AWS Lambda invocation too.
 
 Outside of Lambda (for example in test code), call `DB::purge();` to force the database to be synced to S3.
 
