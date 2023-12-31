@@ -24,13 +24,38 @@ That is why this solution is best for testing scenarios (e.g. testing a fully de
 
 ## Setup
 
-You will need an AWS S3 bucket (where the database will be stored). Install the package with Composer:
+You will need an AWS S3 bucket (where the database will be stored). The S3 bucket must exist, but **the SQLite database file will automatically be created** if it doesn't.
+
+Install the package with Composer:
 
 ```sh
 composer require mnapoli/sqlite-s3
 ```
 
 ## Usage
+
+### With Laravel
+
+Add the following to `app/Providers/AppServiceProvider.php` to override the default SQLite connector:
+
+```php
+    public function register(): void
+    {
+        // ...
+        $this->app->bind('db.connector.sqlite', SqliteS3Connector::class);
+    }
+```
+
+Then, update `.env` (or set environment variables) to set:
+
+- `DB_CONNECTION=sqlite`
+- `DB_DATABASE='s3://the-s3-bucket-name/a-file-name.sqlite'`
+
+When running on AWS Lambda with Bref, the database will be uploaded to S3 on every invocation/request.
+
+Outside of Lambda (for example in test code), call `DB::purge();` to force the database to be synced to S3.
+
+### Generic PHP application
 
 Instead of:
 
@@ -45,8 +70,6 @@ Use:
 $db = new PDOSQLiteS3('the-s3-bucket-name', 'a-file-name.sqlite');
 $db->exec('SELECT * FROM my-table');
 ```
-
-The S3 bucket must exist, but **the SQLite database file will automatically be created** if it doesn't.
 
 The database will be uploaded back to S3 when the `$db` instance is destroyed (i.e. when the PDO connection is closed).
 

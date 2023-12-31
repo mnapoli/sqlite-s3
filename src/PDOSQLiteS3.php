@@ -4,6 +4,7 @@ namespace SQLiteS3;
 
 use AsyncAws\Core\Configuration;
 use PDO;
+use SQLiteS3\Bref\ConnectionTracker;
 
 class PDOSQLiteS3 extends PDO
 {
@@ -19,9 +20,16 @@ class PDOSQLiteS3 extends PDO
         $dbFileName = $this->dbSynchronizer->open();
 
         parent::__construct('sqlite:' . $dbFileName);
+
+        ConnectionTracker::trackConnection($this);
     }
 
     public function __destruct()
+    {
+        $this->close();
+    }
+
+    public function close(): void
     {
         $this->dbSynchronizer->close();
     }

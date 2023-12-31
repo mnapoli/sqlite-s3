@@ -5,18 +5,29 @@ namespace SQLiteS3;
 use AsyncAws\Core\Configuration;
 use AsyncAws\S3\Exception\NoSuchKeyException;
 use AsyncAws\SimpleS3\SimpleS3Client;
+use Bref\Logger\StderrLogger;
+use Psr\Log\LogLevel;
 use RuntimeException;
 
+/**
+ * @internal
+ */
 class DbSynchronizer
 {
     private readonly SimpleS3Client $s3;
     private string | null $dbFileName = null;
+    private readonly StderrLogger $logger;
 
     /**
      * @param Configuration|array<Configuration::OPTION_*, string|null> $s3ClientConfig
      */
-    public function __construct(private readonly string $bucket, private readonly string $key, array|Configuration $s3ClientConfig = [])
+    public function __construct(
+        private readonly string $bucket,
+        private readonly string $key,
+        array|Configuration $s3ClientConfig = [],
+    )
     {
+        $this->logger = new StderrLogger(LogLevel::INFO);
         $this->s3 = new SimpleS3Client($s3ClientConfig);
     }
 
@@ -25,6 +36,8 @@ class DbSynchronizer
      */
     public function open(): string
     {
+        $this->logger->info('Downloading and opening the SQLite database');
+
         try {
             $contentAsResource = $this->s3->download($this->bucket, $this->key)->getContentAsResource();
         } catch (NoSuchKeyException) {
@@ -54,6 +67,8 @@ class DbSynchronizer
         if (! $this->dbFileName) {
             return;
         }
+
+        $this->logger->info('Closing and uploading the SQLite database');
 
         // Upload back to S3
         $contentAsResource = fopen($this->dbFileName, 'rb');
