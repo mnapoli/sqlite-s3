@@ -81,7 +81,7 @@ class PDOSQLiteS3 extends PDO
         return parent::exec(...$params);
     }
 
-    public function query(...$params)
+    public function query(mixed ...$params)
     {
         $this->ensureIsNotClosed();
 
