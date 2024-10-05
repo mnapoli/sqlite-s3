@@ -26,8 +26,10 @@ abstract class ConnectionTracker
 
     public static function closeAll(): void
     {
-        foreach (self::$connections as $connection => $_) {
-            $connection->close();
+        if (isset(self::$connections)) {
+            foreach (self::$connections as $connection => $_) {
+                $connection->close();
+            }
         }
 
         // @phpstan-ignore-next-line
