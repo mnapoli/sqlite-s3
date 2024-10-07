@@ -16,6 +16,7 @@ class DbSynchronizer
 {
     private readonly SimpleS3Client $s3;
     private string | null $dbFileName = null;
+    private string | null $dbFileHash = null;
     private readonly StderrLogger $logger;
 
     /**
@@ -58,6 +59,11 @@ class DbSynchronizer
             throw new RuntimeException('Could not close temporary file');
         }
 
+        $this->dbFileHash = md5_file($this->dbFileName);
+        if ($this->dbFileHash === false) {
+            throw new RuntimeException('Could not calculate MD5 hash');
+        }
+
         return $this->dbFileName;
     }
 
@@ -67,12 +73,16 @@ class DbSynchronizer
             return;
         }
 
-        $this->logger->info('Closing and uploading the SQLite database');
+        $fileChanged = $this->dbFileHash !== md5_file($this->dbFileName);
 
-        // Upload back to S3
-        $contentAsResource = fopen($this->dbFileName, 'rb');
-        $this->s3->upload($this->bucket, $this->key, $contentAsResource);
-        fclose($contentAsResource);
+        $this->logger->info('Closing' . ($fileChanged ? ' and uploading' : '') . ' the SQLite database');
+
+        if ($fileChanged) {
+            // Upload back to S3
+            $contentAsResource = fopen($this->dbFileName, 'rb');
+            $this->s3->upload($this->bucket, $this->key, $contentAsResource);
+            fclose($contentAsResource);
+        }
 
         unlink($this->dbFileName);
 
