@@ -36,6 +36,11 @@ class PDOSQLiteS3 extends PDO
         $this->dbSynchronizer->close();
     }
 
+    public function dbFileName(): string|null
+    {
+        return $this->dbSynchronizer->dbFileName();
+    }
+
     private function ensureIsNotClosed(): void
     {
         if (! $this->dbSynchronizer->isOpened()) {

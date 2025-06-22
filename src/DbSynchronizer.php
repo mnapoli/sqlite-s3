@@ -89,6 +89,11 @@ class DbSynchronizer
         $this->dbFileName = null;
     }
 
+    public function dbFileName(): string|null
+    {
+        return $this->dbFileName;
+    }
+
     public function isOpened(): bool
     {
         return $this->dbFileName !== null;
